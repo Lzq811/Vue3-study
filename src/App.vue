@@ -1,6 +1,22 @@
 <script setup lang="ts">
+import api from '@api/index.ts'
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import { onMounted, ref } from 'vue'
+
+
+const dogPic = ref('')
+const getDogPic = async () => {
+  const res = await api.common.ReqGetDogs()
+  if (res.status === 'success') {
+    dogPic.value = res.message
+  }
+}
+
+onMounted(() => {
+  getDogPic()
+})
+
 </script>
 
 <template>
@@ -9,7 +25,11 @@ import HelloWorld from './components/HelloWorld.vue'
 
     <div class="wrapper">
       <HelloWorld msg="You did it!" />
-      <el-button type="primary">Primary</el-button>
+      <el-button type="primary" @click="getDogPic">获取狗狗图片</el-button>
+      <div class="less-text"> hello Less</div>
+      <div>
+        <img :src="dogPic" alt="logo" width="200px" height="200px" />
+      </div>
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
@@ -19,6 +39,13 @@ import HelloWorld from './components/HelloWorld.vue'
 
   <RouterView />
 </template>
+
+<style lang="less" scoped>
+.less-text {
+  color: red;
+  font-size: 36px;
+}
+</style>
 
 <style scoped>
 header {
