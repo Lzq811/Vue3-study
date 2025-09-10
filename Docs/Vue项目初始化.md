@@ -174,6 +174,139 @@
 
   - **二次封装**。目标：优化请求代码量，统一处理请求拦截&响应拦截；根据不同业务逻辑拆分代码，尽可能的实现业务解耦；具体操作参考文档：[Vue3使用axios和二次封装](https://www.jianshu.com/p/3fde486a9ccb)
 
+- ts配置。使用中根据需要在做配置
+
+- 保存时自动格式化代码
+
+  - 由于脚手架已经默认安装了 **ESLint & Prettier**，已经默认生效了；
+
+  - 个性化配置；
+
+    ```json
+    # 根目录下的 .prettier.json 文件
+    {
+      "$schema": "https://json.schemastore.org/prettierrc",
+      "printWidth": 100,
+      "tabWidth": 2,
+      "useTabs": true,
+      "semi": false,
+      "singleQuote": true,
+      "trailingComma": "none",
+      "bracketSpacing": true,
+      "bracketSameLine": true,
+      "arrowParens": "always",
+      "htmlWhitespaceSensitivity": "ignore",
+      "vueIndentScriptAndStyle": true,
+      "endOfLine": "auto",
+      "singleAttributePerLine": false
+    }
+    ```
+
+    还要解决默认 `.vue` 文件自动格式化有bug的问题;
+
+    ```json
+    # settings.json 文件， 添加如下代码
+    
+    "[vue]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
+    ```
+
+  - 配置功能含义描述参考 [参考文档](https://www.jianshu.com/p/955f301fd69f)
+
+- 配置环境变量
+
+  - `vite v7+` 版本已经内部集成了 `dotenv`工具，就不用再安装其他的工具了。如果说喜欢用 [`env-cross`参考](https://www.jianshu.com/p/368f51e19b1d)
+
+  - 具体配置
+
+    1.  根目录创建目录 `envConfig`。并创建以下文件
+
+       | 环境变量文件          | 说明         |
+       | --------------------- | ------------ |
+       | `envConfig/.env`      |              |
+       | `envConfig/.env.test` | 测试环境配置 |
+       | `envConfig/.env.prod` | 生产环境配置 |
+
+       ```basic
+       # 配置demo
+       VITE_API_BASE_URL=https://api.test.com
+       VITE_APP_ID=201937493743743755
+       MODE=test
+       ```
+
+       [配置参考官方文档](https://vitejs.cn/vite6-cn/guide/env-and-mode.html#env-files)
+
+    2. 把 `vite` 加载环境变量文件指向 `envConfig` 目录。
+
+       ```tsx
+       // vite.config.ts 文件
+       
+       import { defineConfig } from 'vite'
+       import vue from '@vitejs/plugin-vue'
+       
+       // https://vite.dev/config/
+       export default defineConfig({
+       	envDir: './envConfig',
+       	plugins: [
+       		...
+       	],
+       	css: {
+       		...
+       	},
+       	resolve: {
+       		...
+       	}
+       })
+       
+       ```
+
+       
+
+    3. 配置指令 `package.josn`文件
+
+       ```json
+       "scripts": {
+         "dev": "vite --mode test",
+         "start": "vite --mode test",
+         "start--prod": "vite --mode prod",
+         "build": "run-p type-check \"build-only {@}\" --",
+         "preview": "vite preview",
+         "build-only": "vite build",
+         "build--test": "run-p type-check \"build-only {@}\" -- --mode test",
+         "build--prod": "run-p type-check \"build-only {@}\" -- --mode prod",
+         "type-check": "vue-tsc --build",
+         "lint": "eslint . --fix",
+         "format": "prettier --write src/"
+       }
+       ```
+
+       
+
+    4. 调用环境变量
+
+       - 如果需要在 `vite.config.ts`中调用环境变量请使用 `vite` 提供的 `loadEnv`方法。具体参考 [loadEnv文档](https://vitejs.cn/vite6-cn/config/#using-environment-variables-in-config)
+
+       - 调用参考
+
+         ```tsx
+         // App.vue
+         onMounted(() => {
+           console.log(import.meta.env) // 输出如下
+         	{
+             "BASE_URL": "/",
+             "DEV": true,
+             "MODE": "test",
+             "PROD": false,
+             "SSR": false,
+             "VITE_API_BASE_URL": "https://api.test.com",
+             "VITE_APP_ID": "201937493743743755"
+           }
+         })
+         ```
+
+         
+
 - 其他依赖项
 
 ##### 2.3 简单初始化目录

@@ -7,10 +7,14 @@
     "node": "^20.19.0 || >=22.12.0"
   },
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --mode test",
+    "start": "vite --mode test",
+    "start--prod": "vite --mode prod",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "build-only": "vite build",
+    "build--test": "run-p type-check \"build-only {@}\" -- --mode test",
+    "build--prod": "run-p type-check \"build-only {@}\" -- --mode prod",
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix",
     "format": "prettier --write src/"

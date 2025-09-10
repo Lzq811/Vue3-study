@@ -10,30 +10,31 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    vue(),
-    vueDevTools(),
-    AutoImport({
-      resolvers: [ElementPlusResolver()],
-    }),
-    Components({
-      resolvers: [ElementPlusResolver()],
-    }),
-  ],
-  css: {
-    preprocessorOptions: {
-      less: {
-        // 启用 JavaScript 表达式（某些 Less 插件可能需要）
-        javascriptEnabled: true,
-        // 可选：全局注入 Less 变量或混入文件，这样每个 Less 文件都会自动导入
-        // additionalData: `@import "@/styles/variables.less";`, // 根据你的文件路径调整
-      },
-    },
-  },
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-      '@api': fileURLToPath(new URL('./src/api', import.meta.url)),
-    },
-  },
+	envDir: './envConfig',
+	plugins: [
+		vue(),
+		vueDevTools(),
+		AutoImport({
+			resolvers: [ElementPlusResolver()]
+		}),
+		Components({
+			resolvers: [ElementPlusResolver()]
+		})
+	],
+	css: {
+		preprocessorOptions: {
+			less: {
+				// 启用 JavaScript 表达式（某些 Less 插件可能需要）
+				javascriptEnabled: true
+				// 可选：全局注入 Less 变量或混入文件，这样每个 Less 文件都会自动导入
+				// additionalData: `@import "@/styles/variables.less";`, // 根据你的文件路径调整
+			}
+		}
+	},
+	resolve: {
+		alias: {
+			'@': fileURLToPath(new URL('./src', import.meta.url)),
+			'@api': fileURLToPath(new URL('./src/api', import.meta.url))
+		}
+	}
 })

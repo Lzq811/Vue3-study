@@ -2,8 +2,8 @@ import http from '@api/http.ts'
 import { BASE } from '@api/index.ts'
 
 interface IParrms {
-  username: string
-  password: string
+	username: string
+	password: string
 }
 // http 接三个参数，url必填, params默认空对象可以不写, get或者post默认post可以不写,
 // 登陆login
