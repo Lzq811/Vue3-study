@@ -10,6 +10,7 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 // https://vite.dev/config/
 export default defineConfig({
+	base: '/pre-test/',
 	envDir: './envConfig',
 	plugins: [
 		vue(),
@@ -34,7 +35,9 @@ export default defineConfig({
 	resolve: {
 		alias: {
 			'@': fileURLToPath(new URL('./src', import.meta.url)),
-			'@api': fileURLToPath(new URL('./src/api', import.meta.url))
+			'@api': fileURLToPath(new URL('./src/api', import.meta.url)),
+			'@views': fileURLToPath(new URL('./src/views', import.meta.url)),
+			'@router': fileURLToPath(new URL('./src/router', import.meta.url))
 		}
 	}
 })

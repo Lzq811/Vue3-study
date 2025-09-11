@@ -3,6 +3,8 @@
 	import { RouterLink, RouterView } from 'vue-router'
 	import HelloWorld from './components/HelloWorld.vue'
 	import { onMounted, ref } from 'vue'
+	import { useRouter } from 'vue-router'
+	const router = useRouter()
 
 	const dogPic = ref('')
 	const getDogPic = async () => {
@@ -10,6 +12,13 @@
 		if (res.status === 'success') {
 			dogPic.value = res.message
 		}
+	}
+
+	const goPage = () => {
+		// router.push('/system/menus')
+		router.push({
+			name: 'MENUS'
+		})
 	}
 
 	onMounted(() => {
@@ -41,6 +50,8 @@
 			<nav>
 				<RouterLink to="/">Home</RouterLink>
 				<RouterLink to="/about">About</RouterLink>
+				<RouterLink :to="{ name: 'MENUS' }">Menus</RouterLink>
+				<el-button type="primary" @click="goPage">go menus page</el-button>
 			</nav>
 		</div>
 	</header>
