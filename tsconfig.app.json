@@ -9,7 +9,8 @@
 			"@/*": ["./src/*"],
 			"@api/*": ["./src/api/*"],
 			"@views/*": ["./src/views/*"],
-			"@router/*": ["./src/router/*"]
+			"@router/*": ["./src/router/*"],
+			"@components/*": ["./src/components/*"]
 		}
 	}
 }
