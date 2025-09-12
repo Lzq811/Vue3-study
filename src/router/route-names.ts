@@ -8,4 +8,5 @@ export const HOME = 'HOME'
 
 /********* 系统管理模块 **********/
 // 菜单管理
-export const MENUS = 'MENUS'
+export const SYSTEM_MENUS = 'SYSTEM_MENUS'
+export const SYSTEM_BTNS = 'SYSTEM_BTNS'

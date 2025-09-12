@@ -12,6 +12,11 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 export default defineConfig({
 	base: '/pre-test/',
 	envDir: './envConfig',
+	server: {
+		host: '0.0.0.0',
+		port: 8034,
+		open: true
+	},
 	plugins: [
 		vue(),
 		vueDevTools(),

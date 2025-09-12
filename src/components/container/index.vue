@@ -1,9 +1,12 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+	import Header from '@components/header/index.vue'
+	import Aside from '@components/aside/index.vue'
+</script>
 <template>
 	<el-container class="container-layout">
-		<el-aside width="200px" class="aside-container">Aside</el-aside>
+		<el-aside width="200px" class="aside-container"><Aside /></el-aside>
 		<el-container>
-			<el-header class="header-container">Header</el-header>
+			<el-header class="header-container"><Header /></el-header>
 			<el-main class="main-container">
 				<router-view />
 			</el-main>
