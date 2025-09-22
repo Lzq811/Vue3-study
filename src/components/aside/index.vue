@@ -1,6 +1,9 @@
 <script setup lang="ts">
 	import { ref } from 'vue'
-	import type { Ref } from 'vue'
+  import type { Ref } from 'vue'
+import type { MenuItemRegistered } from 'element-plus'
+import { useMenuTagsStore } from '@stores/menuTags'
+const strore = useMenuTagsStore()
 	interface Menu {
 		id: number
 		name: string
@@ -50,7 +53,16 @@
 			]
 		}
 	])
-	const currMenus: Ref<Menu[]> = ref(menus.value[0].children || [])
+const currMenus: Ref<Menu[]> = ref(menus.value[0].children || [])
+// const menusTags: Ref<string[]> = ref([])
+
+const menuClick = (data:MenuItemRegistered) => {
+  // const isHave = menusTags.value.find(item => item === data.index)
+  // if (!isHave) {
+  //   menusTags.value.push(data.index)
+  // }
+  console.log('tags', data)
+}
 
 	const formatRoutePath = (path: string) => {
 		/**
@@ -74,7 +86,8 @@
 			<template v-for="item in currMenus" :key="item.id">
 				<el-menu-item
 					v-if="!item.children || item.children.length === 0"
-					:index="formatRoutePath(item.path)">
+					:index="formatRoutePath(item.path)"
+          @click="menuClick">
 					<el-icon><component :is="item.icon" v-if="item.icon"></component></el-icon>
 					<span>{{ item.name }}</span>
 				</el-menu-item>
@@ -86,7 +99,8 @@
 					<el-menu-item
 						:index="formatRoutePath(child.path)"
 						v-for="child in item.children"
-						:key="child.id">
+						:key="child.id"
+            @click="menuClick">
 						<el-icon><component :is="child.icon" v-if="child.icon"></component></el-icon>
 						<span>{{ child.name }}</span>
 					</el-menu-item>

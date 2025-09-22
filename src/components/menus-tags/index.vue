@@ -1,5 +1,6 @@
 <script setup lang="ts">
-	import { onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
+  import { useMenuTagsStore } from '@stores/menuTags'
 	import type { ScrollbarInstance } from 'element-plus'
 	import type { Ref } from 'vue'
 	import { useRouter } from 'vue-router'
@@ -47,11 +48,15 @@
 		name: '首页',
 		icon: 'Home',
 		path: '/'
-	})
+  })
 
-	onMounted(() => {
-		max.value = innerRef.value!.clientWidth
-	})
+  const store = useMenuTagsStore()
+
+onMounted(() => {
+  store.addMenuTags('menus-tags-demo')
+  console.log(store.menusTags)
+  max.value = innerRef.value!.clientWidth
+})
 
 	const scrollStep = (direction: 'left' | 'right') => {
 		const step = direction === 'left' ? -200 : 200
