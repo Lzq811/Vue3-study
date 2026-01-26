@@ -1,68 +1,19 @@
 <script setup lang="ts">
 	import { ref } from 'vue'
-  import type { Ref } from 'vue'
-import type { MenuItemRegistered } from 'element-plus'
-import { useMenuTagsStore } from '@stores/menuTags'
-const strore = useMenuTagsStore()
-	interface Menu {
-		id: number
-		name: string
-		path: string
-		icon?: string
-		children?: Menu[]
-	}
-	const menus: Ref<Menu[]> = ref([
-		{
-			id: 1,
-			name: '系统管理',
-			icon: 'el-icon-setting',
-			path: '#',
-			children: [
-				{
-					id: 2,
-					name: '菜单管理',
-					icon: 'Menu',
-					path: 'SYSTEM_MENUS'
-				},
-				{
-					id: 3,
-					name: '按钮管理',
-					icon: 'Pointer',
-					path: 'SYSTEM_BTNS'
-				},
-				{
-					id: 4,
-					name: '协议管理',
-					icon: 'WarnTriangleFilled',
-					path: '#',
-					children: [
-						{
-							id: 5,
-							name: '平台协议',
-							icon: 'Paperclip',
-							path: 'SYSTEM_PROTOCOL'
-						},
-						{
-							id: 6,
-							name: '会员协议',
-							icon: 'User',
-							path: 'SYSTEM_MEMBER_PROTOCOL'
-						}
-					]
-				}
-			]
-		}
-	])
-const currMenus: Ref<Menu[]> = ref(menus.value[0].children || [])
-// const menusTags: Ref<string[]> = ref([])
+	import type { Ref } from 'vue'
+	import { storeToRefs } from 'pinia'
+	import type { IterMenuItem } from '@ts/menuTypes'
+	import { useMenusStore } from '@stores/menusStore'
+	const store = useMenusStore()
+	const { menuList, currActivePath } = storeToRefs(store)
+	const currMenus: Ref<IterMenuItem[]> = ref(menuList.value[0].children || [])
 
-const menuClick = (data:MenuItemRegistered) => {
-  // const isHave = menusTags.value.find(item => item === data.index)
-  // if (!isHave) {
-  //   menusTags.value.push(data.index)
-  // }
-  console.log('tags', data)
-}
+	const menuClick = (menu: IterMenuItem) => {
+		if (menu.id || menu.id === 0) {
+			store.addMenuTags(menu)
+			store.updateActivePath(formatRoutePath(menu.path))
+		}
+	}
 
 	const formatRoutePath = (path: string) => {
 		/**
@@ -75,7 +26,7 @@ const menuClick = (data:MenuItemRegistered) => {
 	<div class="logo-wrapper">Logo Logo</div>
 	<el-scrollbar class="menu-scroll-wrapper">
 		<el-menu
-			default-active="/"
+			:default-active="currActivePath"
 			:collapse="false"
 			:collapse-transition="true"
 			background-color="#fff"
@@ -87,11 +38,11 @@ const menuClick = (data:MenuItemRegistered) => {
 				<el-menu-item
 					v-if="!item.children || item.children.length === 0"
 					:index="formatRoutePath(item.path)"
-          @click="menuClick">
+					@click="menuClick(item)">
 					<el-icon><component :is="item.icon" v-if="item.icon"></component></el-icon>
 					<span>{{ item.name }}</span>
 				</el-menu-item>
-				<el-sub-menu v-else>
+				<el-sub-menu v-else :index="currActivePath">
 					<template #title>
 						<el-icon><component :is="item.icon" v-if="item.icon"></component></el-icon>
 						<span>{{ item.name }}</span>
@@ -100,7 +51,7 @@ const menuClick = (data:MenuItemRegistered) => {
 						:index="formatRoutePath(child.path)"
 						v-for="child in item.children"
 						:key="child.id"
-            @click="menuClick">
+						@click="menuClick(item)">
 						<el-icon><component :is="child.icon" v-if="child.icon"></component></el-icon>
 						<span>{{ child.name }}</span>
 					</el-menu-item>

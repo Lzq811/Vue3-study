@@ -95,10 +95,11 @@ Pinia [起始](https://github.com/vuejs/pinia/commit/06aeef54e2cad66696063c62829
    import {storeToRefs} from 'pinia'
    import {useCounterStore} from '@stores/counter'
    const store = useCounterStore()
-   const {count, doubleCount, increment, mixins} = storeToRefs(store)
+   const {count, doubleCount} = storeToRefs(store)
+   const {increment, mixinx} = store // 函数不能响应式解构，也不无需响应式解构
    onMounted(() => {
      console.log(count, doubleCount)
-     increment()
+     increment() 
      mixins(3)
    })
    ```
@@ -196,12 +197,4 @@ pinia的`state`状态数据和 vuex 一样，都是存在内存中的，刷新�
    ```
 
    
-
-
-
-
-
-
-
-
 

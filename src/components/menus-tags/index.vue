@@ -1,62 +1,40 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-  import { useMenuTagsStore } from '@stores/menuTags'
+	import { onMounted, ref, watch } from 'vue'
+	import { useMenusStore } from '@stores/menusStore'
 	import type { ScrollbarInstance } from 'element-plus'
 	import type { Ref } from 'vue'
+	import type { IterMenuItem } from '@ts/menuTypes'
+	import { storeToRefs } from 'pinia'
 	import { useRouter } from 'vue-router'
-	interface Menu {
-		id: number
-		name: string
-		path: string
-		icon?: string
-		children?: Menu[]
-	}
+	const store = useMenusStore()
+	const { menusTags, currActivePath } = storeToRefs(store)
+
 	const router = useRouter()
 	const scrollbarRef = ref<ScrollbarInstance>()
 	const innerRef = ref<HTMLDivElement>()
 	const max: Ref<number> = ref(0)
 	const currScrollVal: Ref<number> = ref(0)
-	const menusList: Ref<Menu[]> = ref([
-		{
-			id: 2,
-			name: '菜单管理',
-			icon: 'Menu',
-			path: 'SYSTEM_MENUS'
-		},
-		{
-			id: 3,
-			name: '按钮管理',
-			icon: 'Pointer',
-			path: 'SYSTEM_BTNS'
-		},
-		{
-			id: 5,
-			name: '平台协议',
-			icon: 'Paperclip',
-			path: 'SYSTEM_PROTOCOL'
-		},
-		{
-			id: 6,
-			name: '会员协议',
-			icon: 'User',
-			path: 'SYSTEM_MEMBER_PROTOCOL'
-		}
-	])
+
 	const currIndex: Ref<number> = ref(-1)
-	const homeMenu: Ref<Menu> = ref({
+	const homeMenu: Ref<IterMenuItem> = ref({
 		id: 1,
 		name: '首页',
 		icon: 'Home',
 		path: '/'
-  })
+	})
 
-  const store = useMenuTagsStore()
+	watch(
+		() => currActivePath.value,
+		() => {
+			currIndex.value = menusTags.value.findIndex(
+				(item: IterMenuItem) => formatRoutePath(item.path) === currActivePath.value
+			)
+		}
+	)
 
-onMounted(() => {
-  store.addMenuTags('menus-tags-demo')
-  console.log(store.menusTags)
-  max.value = innerRef.value!.clientWidth
-})
+	onMounted(() => {
+		max.value = innerRef.value!.clientWidth
+	})
 
 	const scrollStep = (direction: 'left' | 'right') => {
 		const step = direction === 'left' ? -200 : 200
@@ -71,14 +49,13 @@ onMounted(() => {
 		 */
 		return path.replace(/_+/g, '-').toLowerCase()
 	}
-	const handleClick = (item: Menu, idx: number) => {
+	const handleClick = (item: IterMenuItem, idx: number) => {
 		currIndex.value = idx
 		router.push(formatRoutePath(item.path))
+		store.updateActivePath(formatRoutePath(item.path))
 	}
 	const handleClose = (idx: number) => {
-		router.push(formatRoutePath(homeMenu.value.path))
-		currIndex.value = -1
-		menusList.value.splice(idx, 1)
+		store.mixinsMenuTags(idx)
 	}
 </script>
 <template>
@@ -95,7 +72,7 @@ onMounted(() => {
 					<div
 						class="menu-tag-item"
 						:class="{ 'menu-tag-item-active': currIndex === index }"
-						v-for="(item, index) in menusList"
+						v-for="(item, index) in menusTags"
 						:key="item.path">
 						<span @click="handleClick(item, index)">{{ item.name }}</span>
 						&nbsp;&nbsp;

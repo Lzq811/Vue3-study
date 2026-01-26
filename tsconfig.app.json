@@ -11,6 +11,7 @@
 			"@views/*": ["./src/views/*"],
 			"@router/*": ["./src/router/*"],
 			"@stores/*": ["./src/stores/*"],
+			"@ts/*": ["./src/ts/*"],
 			"@components/*": ["./src/components/*"]
 		}
 	}
